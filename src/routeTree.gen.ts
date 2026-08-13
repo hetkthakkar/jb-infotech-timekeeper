@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AttendanceRouteImport } from './routes/attendance'
+import { Route as EmployeesRouteImport } from './routes/employees'
+import { Route as LeaveRouteImport } from './routes/leave'
+import { Route as ManualPunchRouteImport } from './routes/manual-punch'
+import { Route as PayrollRouteImport } from './routes/payroll'
+import { Route as ShiftsRouteImport } from './routes/shifts'
+import { Route as WarningsRouteImport } from './routes/warnings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AttendanceRoute = AttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeesRoute = EmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaveRoute = LeaveRouteImport.update({
+  id: '/leave',
+  path: '/leave',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManualPunchRoute = ManualPunchRouteImport.update({
+  id: '/manual-punch',
+  path: '/manual-punch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayrollRoute = PayrollRouteImport.update({
+  id: '/payroll',
+  path: '/payroll',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShiftsRoute = ShiftsRouteImport.update({
+  id: '/shifts',
+  path: '/shifts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WarningsRoute = WarningsRouteImport.update({
+  id: '/warnings',
+  path: '/warnings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/attendance': typeof AttendanceRoute
+  '/employees': typeof EmployeesRoute
+  '/leave': typeof LeaveRoute
+  '/manual-punch': typeof ManualPunchRoute
+  '/payroll': typeof PayrollRoute
+  '/shifts': typeof ShiftsRoute
+  '/warnings': typeof WarningsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/attendance': typeof AttendanceRoute
+  '/employees': typeof EmployeesRoute
+  '/leave': typeof LeaveRoute
+  '/manual-punch': typeof ManualPunchRoute
+  '/payroll': typeof PayrollRoute
+  '/shifts': typeof ShiftsRoute
+  '/warnings': typeof WarningsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/attendance': typeof AttendanceRoute
+  '/employees': typeof EmployeesRoute
+  '/leave': typeof LeaveRoute
+  '/manual-punch': typeof ManualPunchRoute
+  '/payroll': typeof PayrollRoute
+  '/shifts': typeof ShiftsRoute
+  '/warnings': typeof WarningsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/attendance'
+    | '/employees'
+    | '/leave'
+    | '/manual-punch'
+    | '/payroll'
+    | '/shifts'
+    | '/warnings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/attendance'
+    | '/employees'
+    | '/leave'
+    | '/manual-punch'
+    | '/payroll'
+    | '/shifts'
+    | '/warnings'
+  id:
+    | '__root__'
+    | '/'
+    | '/attendance'
+    | '/employees'
+    | '/leave'
+    | '/manual-punch'
+    | '/payroll'
+    | '/shifts'
+    | '/warnings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AttendanceRoute: typeof AttendanceRoute
+  EmployeesRoute: typeof EmployeesRoute
+  LeaveRoute: typeof LeaveRoute
+  ManualPunchRoute: typeof ManualPunchRoute
+  PayrollRoute: typeof PayrollRoute
+  ShiftsRoute: typeof ShiftsRoute
+  WarningsRoute: typeof WarningsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/attendance': {
+      id: '/attendance'
+      path: '/attendance'
+      fullPath: '/attendance'
+      preLoaderRoute: typeof AttendanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employees': {
+      id: '/employees'
+      path: '/employees'
+      fullPath: '/employees'
+      preLoaderRoute: typeof EmployeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leave': {
+      id: '/leave'
+      path: '/leave'
+      fullPath: '/leave'
+      preLoaderRoute: typeof LeaveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manual-punch': {
+      id: '/manual-punch'
+      path: '/manual-punch'
+      fullPath: '/manual-punch'
+      preLoaderRoute: typeof ManualPunchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payroll': {
+      id: '/payroll'
+      path: '/payroll'
+      fullPath: '/payroll'
+      preLoaderRoute: typeof PayrollRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shifts': {
+      id: '/shifts'
+      path: '/shifts'
+      fullPath: '/shifts'
+      preLoaderRoute: typeof ShiftsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/warnings': {
+      id: '/warnings'
+      path: '/warnings'
+      fullPath: '/warnings'
+      preLoaderRoute: typeof WarningsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AttendanceRoute: AttendanceRoute,
+  EmployeesRoute: EmployeesRoute,
+  LeaveRoute: LeaveRoute,
+  ManualPunchRoute: ManualPunchRoute,
+  PayrollRoute: PayrollRoute,
+  ShiftsRoute: ShiftsRoute,
+  WarningsRoute: WarningsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
