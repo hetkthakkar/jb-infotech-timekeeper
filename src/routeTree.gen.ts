@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AttendanceRouteImport } from './routes/attendance'
 import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as LeaveRouteImport } from './routes/leave'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ManualPunchRouteImport } from './routes/manual-punch'
 import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as ShiftsRouteImport } from './routes/shifts'
@@ -36,6 +37,11 @@ const EmployeesRoute = EmployeesRouteImport.update({
 const LeaveRoute = LeaveRouteImport.update({
   id: '/leave',
   path: '/leave',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ManualPunchRoute = ManualPunchRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/attendance': typeof AttendanceRoute
   '/employees': typeof EmployeesRoute
   '/leave': typeof LeaveRoute
+  '/login': typeof LoginRoute
   '/manual-punch': typeof ManualPunchRoute
   '/payroll': typeof PayrollRoute
   '/shifts': typeof ShiftsRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/attendance': typeof AttendanceRoute
   '/employees': typeof EmployeesRoute
   '/leave': typeof LeaveRoute
+  '/login': typeof LoginRoute
   '/manual-punch': typeof ManualPunchRoute
   '/payroll': typeof PayrollRoute
   '/shifts': typeof ShiftsRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/attendance': typeof AttendanceRoute
   '/employees': typeof EmployeesRoute
   '/leave': typeof LeaveRoute
+  '/login': typeof LoginRoute
   '/manual-punch': typeof ManualPunchRoute
   '/payroll': typeof PayrollRoute
   '/shifts': typeof ShiftsRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/attendance'
     | '/employees'
     | '/leave'
+    | '/login'
     | '/manual-punch'
     | '/payroll'
     | '/shifts'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/attendance'
     | '/employees'
     | '/leave'
+    | '/login'
     | '/manual-punch'
     | '/payroll'
     | '/shifts'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/attendance'
     | '/employees'
     | '/leave'
+    | '/login'
     | '/manual-punch'
     | '/payroll'
     | '/shifts'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AttendanceRoute: typeof AttendanceRoute
   EmployeesRoute: typeof EmployeesRoute
   LeaveRoute: typeof LeaveRoute
+  LoginRoute: typeof LoginRoute
   ManualPunchRoute: typeof ManualPunchRoute
   PayrollRoute: typeof PayrollRoute
   ShiftsRoute: typeof ShiftsRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/leave'
       fullPath: '/leave'
       preLoaderRoute: typeof LeaveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/manual-punch': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AttendanceRoute: AttendanceRoute,
   EmployeesRoute: EmployeesRoute,
   LeaveRoute: LeaveRoute,
+  LoginRoute: LoginRoute,
   ManualPunchRoute: ManualPunchRoute,
   PayrollRoute: PayrollRoute,
   ShiftsRoute: ShiftsRoute,
