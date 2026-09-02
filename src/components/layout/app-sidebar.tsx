@@ -32,9 +32,19 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Leave", to: "/leave", icon: CalendarDays },
   { title: "Warnings", to: "/warnings", icon: ShieldAlert },
   { title: "Employees", to: "/employees", icon: Users, roles: ["admin", "hr", "superadmin"] },
-  { title: "Shifts", to: "/shifts", icon: AlarmClock, roles: ["admin", "hr", "manager", "superadmin"] },
+  {
+    title: "Shifts",
+    to: "/shifts",
+    icon: AlarmClock,
+    roles: ["admin", "hr", "manager", "superadmin"],
+  },
   { title: "Payroll", to: "/payroll", icon: Wallet, roles: ["admin", "hr", "superadmin"] },
-  { title: "Reports", to: "/reports", icon: BarChart3, roles: ["admin", "hr", "manager", "superadmin"] },
+  {
+    title: "Reports",
+    to: "/reports",
+    icon: BarChart3,
+    roles: ["admin", "hr", "manager", "superadmin"],
+  },
   { title: "Settings", to: "/settings", icon: Settings, roles: ["admin", "hr", "superadmin"] },
 ];
 
@@ -67,7 +77,10 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {visibleItems.map((item) => {
-          const active = item.to === "/" ? pathname === "/" : pathname === item.to || pathname.startsWith(item.to + "/");
+          const active =
+            item.to === "/"
+              ? pathname === "/"
+              : pathname === item.to || pathname.startsWith(item.to + "/");
           return (
             <Link
               key={item.to}
@@ -101,4 +114,3 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
     </div>
   );
 }
-

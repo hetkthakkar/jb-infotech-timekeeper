@@ -10,6 +10,7 @@ Code.gs, Utils.gs, Auth.gs, Employees.gs, Shifts.gs, Punch.gs, Attendance.gs, Ma
 
 The frontend should be designed as a production-style internal company application.
 TECHNOLOGY:
+
 - React
 - TypeScript
 - Tailwind CSS

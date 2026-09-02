@@ -5,8 +5,8 @@ import type { PunchRecord } from "@/services/api";
 import { cn } from "@/lib/utils";
 
 export type TodayPunchHistoryProps = {
-  punches?: PunchRecord[];
-  loading?: boolean;
+  punches?: PunchRecord[] | undefined;
+  loading?: boolean | undefined;
 };
 
 export function TodayPunchHistory({ punches = [], loading }: TodayPunchHistoryProps) {
@@ -37,7 +37,9 @@ export function TodayPunchHistory({ punches = [], loading }: TodayPunchHistoryPr
     <Card className="border-border/80 shadow-xs">
       <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
         <div>
-          <CardTitle className="text-base font-semibold text-foreground">Today's Punch History</CardTitle>
+          <CardTitle className="text-base font-semibold text-foreground">
+            Today's Punch History
+          </CardTitle>
           <CardDescription className="text-xs text-muted-foreground">
             Complete sequential log of IN and OUT events recorded for today
           </CardDescription>
@@ -85,7 +87,7 @@ export function TodayPunchHistory({ punches = [], loading }: TodayPunchHistoryPr
                         "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg shadow-2xs",
                         isIN
                           ? "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30"
-                          : "bg-blue-500/15 text-blue-700 border border-blue-500/30"
+                          : "bg-blue-500/15 text-blue-700 border border-blue-500/30",
                       )}
                     >
                       {isIN ? <LogIn className="h-4 w-4" /> : <LogOut className="h-4 w-4" />}
@@ -98,7 +100,7 @@ export function TodayPunchHistory({ punches = [], loading }: TodayPunchHistoryPr
                             "font-bold text-xs px-2 py-0.5 rounded",
                             isIN
                               ? "bg-emerald-500/15 text-emerald-700"
-                              : "bg-blue-500/15 text-blue-700"
+                              : "bg-blue-500/15 text-blue-700",
                           )}
                         >
                           {punchType}
@@ -109,9 +111,7 @@ export function TodayPunchHistory({ punches = [], loading }: TodayPunchHistoryPr
                       </div>
 
                       {remarksDisplay ? (
-                        <p className="text-xs text-foreground/80 italic mt-1">
-                          "{remarksDisplay}"
-                        </p>
+                        <p className="text-xs text-foreground/80 italic mt-1">"{remarksDisplay}"</p>
                       ) : null}
                     </div>
                   </div>
@@ -125,7 +125,10 @@ export function TodayPunchHistory({ punches = [], loading }: TodayPunchHistoryPr
                     {lat && lng ? (
                       <span className="flex items-center gap-1 text-muted-foreground bg-muted/40 px-2 py-1 rounded-md border border-border/50 font-mono text-[11px]">
                         <MapPin className="h-3 w-3 text-primary" />
-                        <span>{typeof lat === "number" ? lat.toFixed(3) : lat}, {typeof lng === "number" ? lng.toFixed(3) : lng}</span>
+                        <span>
+                          {typeof lat === "number" ? lat.toFixed(3) : lat},{" "}
+                          {typeof lng === "number" ? lng.toFixed(3) : lng}
+                        </span>
                       </span>
                     ) : null}
 
@@ -133,8 +136,10 @@ export function TodayPunchHistory({ punches = [], loading }: TodayPunchHistoryPr
                       variant="outline"
                       className={cn(
                         "text-[11px] font-medium",
-                        statusDisplay.toLowerCase().includes("late") && "border-amber-500/40 text-amber-700 bg-amber-500/10",
-                        statusDisplay.toLowerCase().includes("valid") && "border-emerald-500/40 text-emerald-700 bg-emerald-500/10"
+                        statusDisplay.toLowerCase().includes("late") &&
+                          "border-amber-500/40 text-amber-700 bg-amber-500/10",
+                        statusDisplay.toLowerCase().includes("valid") &&
+                          "border-emerald-500/40 text-emerald-700 bg-emerald-500/10",
                       )}
                     >
                       <Tag className="h-2.5 w-2.5 mr-1" />

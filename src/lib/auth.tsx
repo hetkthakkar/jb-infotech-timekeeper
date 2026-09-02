@@ -43,10 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const result = await authApi.login(employeeId, password);
-      const user: SessionUser =
-        result.user ??
-        result.employee ??
-        ({ employeeId } as SessionUser);
+      const user: SessionUser = result.user ?? result.employee ?? ({ employeeId } as SessionUser);
       const next: Session = {
         ...(result.token ? { token: result.token } : {}),
         user,

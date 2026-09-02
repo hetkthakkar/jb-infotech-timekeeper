@@ -6,12 +6,13 @@ import { cn } from "@/lib/utils";
 export type StatBadgeCardProps = {
   label: string;
   value: string | number | ReactNode;
-  hint?: string;
-  icon?: ReactNode;
-  badgeText?: string;
-  badgeVariant?: "default" | "secondary" | "destructive" | "outline" | "success" | "warning";
-  accentColor?: "primary" | "emerald" | "amber" | "rose" | "blue" | "violet";
-  className?: string;
+  hint?: string | undefined;
+  icon?: ReactNode | undefined;
+  badgeText?: string | undefined;
+  badgeVariant?:
+    "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | undefined;
+  accentColor?: "primary" | "emerald" | "amber" | "rose" | "blue" | "violet" | undefined;
+  className?: string | undefined;
 };
 
 const ACCENT_STYLES = {
@@ -34,12 +35,22 @@ export function StatBadgeCard({
   className,
 }: StatBadgeCardProps) {
   return (
-    <Card className={cn("relative overflow-hidden border-border/80 shadow-xs transition-all hover:shadow-sm", className)}>
+    <Card
+      className={cn(
+        "relative overflow-hidden border-border/80 shadow-xs transition-all hover:shadow-sm",
+        className,
+      )}
+    >
       <CardContent className="p-4 sm:p-5">
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs font-medium text-muted-foreground truncate">{label}</p>
           {icon ? (
-            <span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border", ACCENT_STYLES[accentColor])}>
+            <span
+              className={cn(
+                "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border",
+                ACCENT_STYLES[accentColor],
+              )}
+            >
               {icon}
             </span>
           ) : null}
@@ -51,11 +62,17 @@ export function StatBadgeCard({
           </div>
           {badgeText ? (
             <Badge
-              variant={badgeVariant === "success" || badgeVariant === "warning" ? "secondary" : badgeVariant}
+              variant={
+                badgeVariant === "success" || badgeVariant === "warning"
+                  ? "secondary"
+                  : badgeVariant
+              }
               className={cn(
                 "shrink-0 font-medium text-[11px] px-2 py-0.5",
-                badgeVariant === "success" && "bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/20",
-                badgeVariant === "warning" && "bg-amber-500/15 text-amber-700 hover:bg-amber-500/20",
+                badgeVariant === "success" &&
+                  "bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/20",
+                badgeVariant === "warning" &&
+                  "bg-amber-500/15 text-amber-700 hover:bg-amber-500/20",
               )}
             >
               {badgeText}

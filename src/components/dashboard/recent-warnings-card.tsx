@@ -7,8 +7,8 @@ import type { WarningRecord } from "@/services/api";
 import { cn } from "@/lib/utils";
 
 export type RecentWarningsCardProps = {
-  warnings?: WarningRecord[];
-  loading?: boolean;
+  warnings?: WarningRecord[] | undefined;
+  loading?: boolean | undefined;
 };
 
 export function RecentWarningsCard({ warnings = [], loading }: RecentWarningsCardProps) {
@@ -30,7 +30,11 @@ export function RecentWarningsCard({ warnings = [], loading }: RecentWarningsCar
   const getSeverityBadge = (severity?: string) => {
     const s = (severity || "").toLowerCase();
     if (s.includes("high") || s.includes("critical")) {
-      return <Badge variant="destructive" className="text-[10px] px-1.5 py-0">High</Badge>;
+      return (
+        <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
+          High
+        </Badge>
+      );
     }
     if (s.includes("medium")) {
       return (
@@ -51,7 +55,9 @@ export function RecentWarningsCard({ warnings = [], loading }: RecentWarningsCar
       <div>
         <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
           <div>
-            <CardTitle className="text-base font-semibold text-foreground">Recent Warnings</CardTitle>
+            <CardTitle className="text-base font-semibold text-foreground">
+              Recent Warnings
+            </CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
               Attendance and policy compliance notices
             </CardDescription>
@@ -85,7 +91,9 @@ export function RecentWarningsCard({ warnings = [], loading }: RecentWarningsCar
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5">
                       <ShieldAlert className="h-3.5 w-3.5 text-amber-600 shrink-0" />
-                      <span className="font-semibold text-foreground truncate">{warning.category || warning.subject}</span>
+                      <span className="font-semibold text-foreground truncate">
+                        {warning.category || warning.subject}
+                      </span>
                     </div>
                     {getSeverityBadge(warning.severity)}
                   </div>
@@ -96,7 +104,9 @@ export function RecentWarningsCard({ warnings = [], loading }: RecentWarningsCar
 
                   <div className="flex items-center justify-between pt-1 border-t border-border/40 text-[11px] text-muted-foreground">
                     <span>Issued: {warning.date}</span>
-                    <span className="font-medium text-foreground">{warning.status || "Active"}</span>
+                    <span className="font-medium text-foreground">
+                      {warning.status || "Active"}
+                    </span>
                   </div>
                 </div>
               ))}

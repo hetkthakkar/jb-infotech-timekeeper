@@ -20,7 +20,10 @@ export const Route = createFileRoute("/settings")({
 function SettingsPage() {
   return (
     <AppShell title="Settings">
-      <PageHeader title="Settings" description="Company attendance rules, shift policies, and system settings." />
+      <PageHeader
+        title="Settings"
+        description="Company attendance rules, shift policies, and system settings."
+      />
       <ModulePlaceholder module="Settings" />
     </AppShell>
   );

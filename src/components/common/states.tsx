@@ -3,9 +3,20 @@ import { AlertTriangle, Inbox, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export function LoadingState({ label = "Loading…", className }: { label?: string; className?: string }) {
+export function LoadingState({
+  label = "Loading…",
+  className,
+}: {
+  label?: string;
+  className?: string;
+}) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-3 py-14 text-muted-foreground", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-3 py-14 text-muted-foreground",
+        className,
+      )}
+    >
       <Loader2 className="h-6 w-6 animate-spin text-primary" />
       <p className="text-sm">{label}</p>
     </div>
@@ -24,7 +35,9 @@ export function ErrorState({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-3 py-14 text-center", className)}>
+    <div
+      className={cn("flex flex-col items-center justify-center gap-3 py-14 text-center", className)}
+    >
       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-destructive/10 text-destructive">
         <AlertTriangle className="h-5 w-5" />
       </span>
@@ -53,7 +66,9 @@ export function EmptyState({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-3 py-14 text-center", className)}>
+    <div
+      className={cn("flex flex-col items-center justify-center gap-3 py-14 text-center", className)}
+    >
       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-muted-foreground">
         <Inbox className="h-5 w-5" />
       </span>

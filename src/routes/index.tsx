@@ -78,81 +78,88 @@ function Dashboard() {
   const [activeWarnings, setActiveWarnings] = useState<WarningRecord[]>([]);
   const [pendingManualPunches, setPendingManualPunches] = useState<ManualPunchRequest[]>([]);
 
-  const fetchDashboardData = useCallback(async (isSilent = false) => {
-    if (!isSilent) setLoading(true);
-    setError(null);
+  const fetchDashboardData = useCallback(
+    async (isSilent = false) => {
+      if (!isSilent) setLoading(true);
+      setError(null);
 
-    try {
-      // Parallel fetch from Google Apps Script endpoints
-      const results = await Promise.allSettled([
-        attendanceApi.getToday(employeeId).catch(() => attendanceApi.list({ employeeId, limit: 1 })),
-        attendanceApi.getWeekly(employeeId).catch(() => attendanceApi.list({ employeeId, limit: 7 })),
-        punchApi.getToday(employeeId).catch(() => punchApi.list({ employeeId })),
-        leaveApi.getBalances(employeeId).catch(() => undefined),
-        leaveApi.list({ employeeId }),
-        warningsApi.getActive(employeeId).catch(() => warningsApi.list({ employeeId })),
-        manualPunchApi.getPending(employeeId).catch(() => manualPunchApi.list({ employeeId })),
-      ]);
+      try {
+        // Parallel fetch from Google Apps Script endpoints
+        const results = await Promise.allSettled([
+          attendanceApi
+            .getToday(employeeId)
+            .catch(() => attendanceApi.list({ employeeId, limit: 1 })),
+          attendanceApi
+            .getWeekly(employeeId)
+            .catch(() => attendanceApi.list({ employeeId, limit: 7 })),
+          punchApi.getToday(employeeId).catch(() => punchApi.list({ employeeId })),
+          leaveApi.getBalances(employeeId).catch(() => undefined),
+          leaveApi.list({ employeeId }),
+          warningsApi.getActive(employeeId).catch(() => warningsApi.list({ employeeId })),
+          manualPunchApi.getPending(employeeId).catch(() => manualPunchApi.list({ employeeId })),
+        ]);
 
-      // Parse Today Attendance
-      if (results[0].status === "fulfilled" && results[0].value) {
-        const val = results[0].value;
-        if (Array.isArray(val)) {
-          setTodayAttendance(val.length > 0 ? (val[0] as AttendanceRecord) : null);
+        // Parse Today Attendance
+        if (results[0].status === "fulfilled" && results[0].value) {
+          const val = results[0].value;
+          if (Array.isArray(val)) {
+            setTodayAttendance(val.length > 0 ? (val[0] as AttendanceRecord) : null);
+          } else {
+            setTodayAttendance(val as AttendanceRecord);
+          }
         } else {
-          setTodayAttendance(val as AttendanceRecord);
+          setTodayAttendance(null);
         }
-      } else {
-        setTodayAttendance(null);
-      }
 
-      // Parse Weekly Attendance
-      if (results[1].status === "fulfilled" && Array.isArray(results[1].value)) {
-        setWeeklyAttendance(results[1].value as AttendanceRecord[]);
-      } else {
-        setWeeklyAttendance([]);
-      }
+        // Parse Weekly Attendance
+        if (results[1].status === "fulfilled" && Array.isArray(results[1].value)) {
+          setWeeklyAttendance(results[1].value as AttendanceRecord[]);
+        } else {
+          setWeeklyAttendance([]);
+        }
 
-      // Parse Today Punches
-      if (results[2].status === "fulfilled" && Array.isArray(results[2].value)) {
-        setTodayPunches(results[2].value as PunchRecord[]);
-      } else {
-        setTodayPunches([]);
-      }
+        // Parse Today Punches
+        if (results[2].status === "fulfilled" && Array.isArray(results[2].value)) {
+          setTodayPunches(results[2].value as PunchRecord[]);
+        } else {
+          setTodayPunches([]);
+        }
 
-      // Parse Leave Balances
-      if (results[3].status === "fulfilled" && results[3].value) {
-        setLeaveBalances(results[3].value as LeaveBalance);
-      }
+        // Parse Leave Balances
+        if (results[3].status === "fulfilled" && results[3].value) {
+          setLeaveBalances(results[3].value as LeaveBalance);
+        }
 
-      // Parse Recent Leaves
-      if (results[4].status === "fulfilled" && Array.isArray(results[4].value)) {
-        setRecentLeaves(results[4].value as LeaveRecord[]);
-      } else {
-        setRecentLeaves([]);
-      }
+        // Parse Recent Leaves
+        if (results[4].status === "fulfilled" && Array.isArray(results[4].value)) {
+          setRecentLeaves(results[4].value as LeaveRecord[]);
+        } else {
+          setRecentLeaves([]);
+        }
 
-      // Parse Active Warnings
-      if (results[5].status === "fulfilled" && Array.isArray(results[5].value)) {
-        setActiveWarnings(results[5].value as WarningRecord[]);
-      } else {
-        setActiveWarnings([]);
-      }
+        // Parse Active Warnings
+        if (results[5].status === "fulfilled" && Array.isArray(results[5].value)) {
+          setActiveWarnings(results[5].value as WarningRecord[]);
+        } else {
+          setActiveWarnings([]);
+        }
 
-      // Parse Pending Manual Punches
-      if (results[6].status === "fulfilled" && Array.isArray(results[6].value)) {
-        setPendingManualPunches(results[6].value as ManualPunchRequest[]);
-      } else {
-        setPendingManualPunches([]);
+        // Parse Pending Manual Punches
+        if (results[6].status === "fulfilled" && Array.isArray(results[6].value)) {
+          setPendingManualPunches(results[6].value as ManualPunchRequest[]);
+        } else {
+          setPendingManualPunches([]);
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Failed to load dashboard data.";
+        setError(msg);
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
       }
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Failed to load dashboard data.";
-      setError(msg);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [employeeId]);
+    },
+    [employeeId],
+  );
 
   useEffect(() => {
     void fetchDashboardData();
@@ -166,12 +173,23 @@ function Dashboard() {
 
   // Derived calculations from backend results
   const hasFirstIn = Boolean(todayAttendance?.firstIn && todayAttendance.firstIn !== "—");
-  const firstInVal = todayAttendance?.firstIn || (todayPunches.find((p) => p.type?.toUpperCase() === "IN")?.timestamp) || "—";
-  const lastOutVal = todayAttendance?.lastOut || (todayPunches.filter((p) => p.type?.toUpperCase() === "OUT").pop()?.timestamp) || "—";
+  const firstInVal =
+    todayAttendance?.firstIn ||
+    todayPunches.find((p) => p.type?.toUpperCase() === "IN")?.timestamp ||
+    "—";
+  const lastOutVal =
+    todayAttendance?.lastOut ||
+    todayPunches.filter((p) => p.type?.toUpperCase() === "OUT").pop()?.timestamp ||
+    "—";
 
-  const totalWorkingHours = todayAttendance?.totalHours !== undefined && todayAttendance.totalHours !== ""
-    ? (typeof todayAttendance.totalHours === "number" ? `${todayAttendance.totalHours.toFixed(1)} hrs` : String(todayAttendance.totalHours))
-    : (hasFirstIn ? "In Progress" : "0.0 hrs");
+  const totalWorkingHours =
+    todayAttendance?.totalHours !== undefined && todayAttendance.totalHours !== ""
+      ? typeof todayAttendance.totalHours === "number"
+        ? `${todayAttendance.totalHours.toFixed(1)} hrs`
+        : String(todayAttendance.totalHours)
+      : hasFirstIn
+        ? "In Progress"
+        : "0.0 hrs";
 
   const todayStatus = todayAttendance?.status || (hasFirstIn ? "Present" : "Not Checked In");
 
@@ -180,13 +198,22 @@ function Dashboard() {
   else if (todayAttendance?.status) attendanceStatus = todayAttendance.status;
   else if (hasFirstIn) attendanceStatus = "On Time";
 
-  const pendingLeavesCount = recentLeaves.filter((l) => (l.status || "").toLowerCase().includes("pending")).length;
-  const pendingPunchesCount = pendingManualPunches.filter((p) => (p.status || "").toLowerCase().includes("pending")).length;
+  const pendingLeavesCount = recentLeaves.filter((l) =>
+    (l.status || "").toLowerCase().includes("pending"),
+  ).length;
+  const pendingPunchesCount = pendingManualPunches.filter((p) =>
+    (p.status || "").toLowerCase().includes("pending"),
+  ).length;
   const totalPendingRequests = pendingLeavesCount + pendingPunchesCount;
 
   const totalLeaveRemaining = leaveBalances
-    ? (leaveBalances.remaining ?? ((leaveBalances.casualLeave ?? 0) + (leaveBalances.sickLeave ?? 0) + (leaveBalances.earnedLeave ?? 0)))
-    : (recentLeaves.length > 0 ? "Active" : "0");
+    ? (leaveBalances.remaining ??
+      (leaveBalances.casualLeave ?? 0) +
+        (leaveBalances.sickLeave ?? 0) +
+        (leaveBalances.earnedLeave ?? 0))
+    : recentLeaves.length > 0
+      ? "Active"
+      : "0";
 
   const employeeName = user?.name || user?.email?.split("@")[0] || "Employee";
 
@@ -244,7 +271,9 @@ function Dashboard() {
         <StatBadgeCard
           label="First IN"
           value={firstInVal}
-          hint={hasFirstIn ? (todayAttendance?.isLate ? "Late Entry" : "On Schedule") : "Awaiting entry"}
+          hint={
+            hasFirstIn ? (todayAttendance?.isLate ? "Late Entry" : "On Schedule") : "Awaiting entry"
+          }
           icon={<LogIn className="h-4 w-4" />}
           accentColor="emerald"
           badgeText={todayAttendance?.isLate ? "Late" : undefined}
@@ -255,7 +284,7 @@ function Dashboard() {
         <StatBadgeCard
           label="Last OUT"
           value={lastOutVal}
-          hint={lastOutVal !== "—" ? "Recorded exit" : (hasFirstIn ? "In office" : "—")}
+          hint={lastOutVal !== "—" ? "Recorded exit" : hasFirstIn ? "In office" : "—"}
           icon={<LogOut className="h-4 w-4" />}
           accentColor="blue"
         />
@@ -292,7 +321,11 @@ function Dashboard() {
         {/* 7. Leave Balance */}
         <StatBadgeCard
           label="Leave Balance"
-          value={typeof totalLeaveRemaining === "number" ? `${totalLeaveRemaining}d` : totalLeaveRemaining}
+          value={
+            typeof totalLeaveRemaining === "number"
+              ? `${totalLeaveRemaining}d`
+              : totalLeaveRemaining
+          }
           hint="Available quota"
           icon={<Palmtree className="h-4 w-4" />}
           accentColor="blue"
@@ -331,19 +364,9 @@ function Dashboard() {
 
       {/* Grid Row 3: Leave Summary, Recent Warnings, Pending Manual Punch Requests */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
-        <LeaveSummaryCard
-          balances={leaveBalances}
-          recentLeaves={recentLeaves}
-          loading={loading}
-        />
-        <RecentWarningsCard
-          warnings={activeWarnings}
-          loading={loading}
-        />
-        <PendingManualPunchesCard
-          requests={pendingManualPunches}
-          loading={loading}
-        />
+        <LeaveSummaryCard balances={leaveBalances} recentLeaves={recentLeaves} loading={loading} />
+        <RecentWarningsCard warnings={activeWarnings} loading={loading} />
+        <PendingManualPunchesCard requests={pendingManualPunches} loading={loading} />
       </div>
     </AppShell>
   );

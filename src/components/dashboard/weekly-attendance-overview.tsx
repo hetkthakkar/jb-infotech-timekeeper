@@ -5,8 +5,8 @@ import type { AttendanceRecord } from "@/services/api";
 import { cn } from "@/lib/utils";
 
 export type WeeklyAttendanceOverviewProps = {
-  records?: AttendanceRecord[];
-  loading?: boolean;
+  records?: AttendanceRecord[] | undefined;
+  loading?: boolean | undefined;
 };
 
 export function WeeklyAttendanceOverview({ records = [], loading }: WeeklyAttendanceOverviewProps) {
@@ -35,7 +35,10 @@ export function WeeklyAttendanceOverview({ records = [], loading }: WeeklyAttend
 
   for (const r of records) {
     if (r.totalHours) {
-      const num = typeof r.totalHours === "number" ? r.totalHours : parseFloat(String(r.totalHours).replace(/[^0-9.]/g, ""));
+      const num =
+        typeof r.totalHours === "number"
+          ? r.totalHours
+          : parseFloat(String(r.totalHours).replace(/[^0-9.]/g, ""));
       if (!isNaN(num)) totalHours += num;
     }
     const status = (r.status || "").toLowerCase();
@@ -82,7 +85,10 @@ export function WeeklyAttendanceOverview({ records = [], loading }: WeeklyAttend
     }
     if (s.includes("off") || s.includes("weekend")) {
       return (
-        <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal text-muted-foreground">
+        <Badge
+          variant="outline"
+          className="text-[10px] px-1.5 py-0 font-normal text-muted-foreground"
+        >
           Off
         </Badge>
       );
@@ -105,7 +111,9 @@ export function WeeklyAttendanceOverview({ records = [], loading }: WeeklyAttend
     <Card className="border-border/80 shadow-xs">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-2">
         <div>
-          <CardTitle className="text-base font-semibold text-foreground">Weekly Attendance Overview</CardTitle>
+          <CardTitle className="text-base font-semibold text-foreground">
+            Weekly Attendance Overview
+          </CardTitle>
           <CardDescription className="text-xs text-muted-foreground">
             Current week attendance breakdown and logged work hours
           </CardDescription>
@@ -140,7 +148,8 @@ export function WeeklyAttendanceOverview({ records = [], loading }: WeeklyAttend
             </div>
             <p className="text-sm font-medium text-foreground">No weekly records available</p>
             <p className="text-xs text-muted-foreground mt-0.5 max-w-xs">
-              Attendance records for the current period will automatically appear here once punches are processed.
+              Attendance records for the current period will automatically appear here once punches
+              are processed.
             </p>
           </div>
         ) : (
@@ -160,18 +169,29 @@ export function WeeklyAttendanceOverview({ records = [], loading }: WeeklyAttend
                   <div className="space-y-1 text-[11px]">
                     <div className="flex justify-between text-muted-foreground">
                       <span>IN:</span>
-                      <span className="font-mono font-medium text-foreground">{rec.firstIn || "—"}</span>
+                      <span className="font-mono font-medium text-foreground">
+                        {rec.firstIn || "—"}
+                      </span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>OUT:</span>
-                      <span className="font-mono font-medium text-foreground">{rec.lastOut || "—"}</span>
+                      <span className="font-mono font-medium text-foreground">
+                        {rec.lastOut || "—"}
+                      </span>
                     </div>
                   </div>
 
                   <div className="pt-1.5 border-t border-border/50 flex items-center justify-between text-xs">
                     <span className="text-[10px] text-muted-foreground">Hours:</span>
-                    <span className={cn("font-semibold font-mono", hasHours ? "text-primary font-bold" : "text-muted-foreground")}>
-                      {typeof rec.totalHours === "number" ? `${rec.totalHours.toFixed(1)}h` : (rec.totalHours || "—")}
+                    <span
+                      className={cn(
+                        "font-semibold font-mono",
+                        hasHours ? "text-primary font-bold" : "text-muted-foreground",
+                      )}
+                    >
+                      {typeof rec.totalHours === "number"
+                        ? `${rec.totalHours.toFixed(1)}h`
+                        : rec.totalHours || "—"}
                     </span>
                   </div>
                 </div>

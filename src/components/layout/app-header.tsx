@@ -94,9 +94,13 @@ export function AppHeader({ title }: { title?: string }) {
                   {employeeName.charAt(0).toUpperCase()}
                 </div>
                 <div className="hidden text-left md:block min-w-0 max-w-44">
-                  <p className="truncate text-xs font-semibold text-foreground leading-snug">{employeeName}</p>
+                  <p className="truncate text-xs font-semibold text-foreground leading-snug">
+                    {employeeName}
+                  </p>
                   <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground leading-tight">
-                    <span className="font-mono text-[10px] text-primary/90 font-medium">#{employeeId}</span>
+                    <span className="font-mono text-[10px] text-primary/90 font-medium">
+                      #{employeeId}
+                    </span>
                     <span>•</span>
                     <span className="capitalize text-muted-foreground">{role}</span>
                   </div>
@@ -107,7 +111,9 @@ export function AppHeader({ title }: { title?: string }) {
             <DropdownMenuContent align="end" className="w-64 p-2 shadow-lg">
               <DropdownMenuLabel className="font-normal px-2 py-1.5">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-semibold leading-none text-foreground">{employeeName}</p>
+                  <p className="text-sm font-semibold leading-none text-foreground">
+                    {employeeName}
+                  </p>
                   <div className="flex items-center gap-1.5 pt-0.5 text-xs text-muted-foreground">
                     <IdCard className="h-3 w-3 text-muted-foreground shrink-0" />
                     <span className="font-mono text-xs">{employeeId}</span>
@@ -165,4 +171,3 @@ export function AppHeader({ title }: { title?: string }) {
     </header>
   );
 }
-

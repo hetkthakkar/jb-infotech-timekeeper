@@ -1,25 +1,13 @@
 import { requireAuth } from "@/lib/auth-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import {
-  AlarmClock,
-  Clock,
-  LogIn,
-  LogOut,
-  RefreshCw,
-  ShieldCheck,
-} from "lucide-react";
+import { AlarmClock, Clock, LogIn, LogOut, RefreshCw, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/common/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
-import {
-  attendanceApi,
-  punchApi,
-  type AttendanceRecord,
-  type PunchRecord,
-} from "@/services/api";
+import { attendanceApi, punchApi, type AttendanceRecord, type PunchRecord } from "@/services/api";
 import { PunchActionCard } from "@/components/punch/punch-action-card";
 import { TodayPunchHistory } from "@/components/punch/today-punch-history";
 import { toast } from "sonner";
@@ -94,42 +82,47 @@ function PunchPage() {
           message: err.message,
         });
       },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 },
     );
   }, []);
 
-  const fetchPunchData = useCallback(async (isSilent = false) => {
-    if (!isSilent) setLoading(true);
+  const fetchPunchData = useCallback(
+    async (isSilent = false) => {
+      if (!isSilent) setLoading(true);
 
-    try {
-      const [attRes, punchesRes] = await Promise.allSettled([
-        attendanceApi.getToday(employeeId).catch(() => attendanceApi.list({ employeeId, limit: 1 })),
-        punchApi.getToday(employeeId).catch(() => punchApi.list({ employeeId })),
-      ]);
+      try {
+        const [attRes, punchesRes] = await Promise.allSettled([
+          attendanceApi
+            .getToday(employeeId)
+            .catch(() => attendanceApi.list({ employeeId, limit: 1 })),
+          punchApi.getToday(employeeId).catch(() => punchApi.list({ employeeId })),
+        ]);
 
-      if (attRes.status === "fulfilled" && attRes.value) {
-        const val = attRes.value;
-        if (Array.isArray(val)) {
-          setTodayAttendance(val.length > 0 ? (val[0] as AttendanceRecord) : null);
+        if (attRes.status === "fulfilled" && attRes.value) {
+          const val = attRes.value;
+          if (Array.isArray(val)) {
+            setTodayAttendance(val.length > 0 ? (val[0] as AttendanceRecord) : null);
+          } else {
+            setTodayAttendance(val as AttendanceRecord);
+          }
         } else {
-          setTodayAttendance(val as AttendanceRecord);
+          setTodayAttendance(null);
         }
-      } else {
-        setTodayAttendance(null);
-      }
 
-      if (punchesRes.status === "fulfilled" && Array.isArray(punchesRes.value)) {
-        setTodayPunches(punchesRes.value as PunchRecord[]);
-      } else {
-        setTodayPunches([]);
+        if (punchesRes.status === "fulfilled" && Array.isArray(punchesRes.value)) {
+          setTodayPunches(punchesRes.value as PunchRecord[]);
+        } else {
+          setTodayPunches([]);
+        }
+      } catch {
+        // Graceful error handling
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
       }
-    } catch {
-      // Graceful error handling
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [employeeId]);
+    },
+    [employeeId],
+  );
 
   useEffect(() => {
     acquireLocation();
@@ -156,13 +149,15 @@ function PunchPage() {
         remarks,
       });
 
-      const recordedTime = result?.timestampIST || result?.TimestampIST || result?.timestamp || "just now";
+      const recordedTime =
+        result?.timestampIST || result?.TimestampIST || result?.timestamp || "just now";
       toast.success(`Successfully punched ${type} at ${recordedTime}`);
-      
+
       // Reload punch records and today's attendance summary
       await fetchPunchData(true);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : `Failed to record punch ${type}. Please try again.`;
+      const msg =
+        err instanceof Error ? err.message : `Failed to record punch ${type}. Please try again.`;
       setErrorMessage(msg);
       toast.error(msg);
     } finally {
@@ -214,7 +209,10 @@ function PunchPage() {
             <div className="min-w-0">
               <p className="text-[11px] font-medium text-muted-foreground">First IN Today</p>
               <p className="text-xs font-bold text-foreground truncate">
-                {todayAttendance?.firstIn || (todayPunches.find((p) => (p.type || p.Type)?.toUpperCase() === "IN")?.timestampIST) || "Not punched yet"}
+                {todayAttendance?.firstIn ||
+                  todayPunches.find((p) => (p.type || p.Type)?.toUpperCase() === "IN")
+                    ?.timestampIST ||
+                  "Not punched yet"}
               </p>
             </div>
           </CardContent>

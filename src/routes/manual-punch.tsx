@@ -20,7 +20,10 @@ export const Route = createFileRoute("/manual-punch")({
 function ManualPunchPage() {
   return (
     <AppShell title="Manual Punch">
-      <PageHeader title="Manual Punch" description="Corrections and manual entries with audit trail." />
+      <PageHeader
+        title="Manual Punch"
+        description="Corrections and manual entries with audit trail."
+      />
       <ModulePlaceholder module="Manual Punch" />
     </AppShell>
   );

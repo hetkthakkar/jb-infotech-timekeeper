@@ -5,10 +5,10 @@ import type { AttendanceRecord } from "@/services/api";
 import { cn } from "@/lib/utils";
 
 export type TodayAttendanceCardProps = {
-  record?: AttendanceRecord | null;
-  shiftName?: string;
-  shiftTime?: string;
-  loading?: boolean;
+  record?: AttendanceRecord | null | undefined;
+  shiftName?: string | undefined;
+  shiftTime?: string | undefined;
+  loading?: boolean | undefined;
 };
 
 export function TodayAttendanceCard({
@@ -38,7 +38,12 @@ export function TodayAttendanceCard({
   const hasFirstIn = Boolean(record?.firstIn && record.firstIn !== "—");
   const hasLastOut = Boolean(record?.lastOut && record.lastOut !== "—");
   const status = record?.status || (hasFirstIn ? "Present" : "Not Punched In");
-  const totalHours = record?.totalHours !== undefined && record.totalHours !== "" ? record.totalHours : (hasFirstIn ? "In Progress" : "0 hrs");
+  const totalHours =
+    record?.totalHours !== undefined && record.totalHours !== ""
+      ? record.totalHours
+      : hasFirstIn
+        ? "In Progress"
+        : "0 hrs";
 
   const getStatusBadge = (st: string) => {
     const s = st.toLowerCase();
@@ -66,7 +71,11 @@ export function TodayAttendanceCard({
         </Badge>
       );
     }
-    return <Badge variant="outline" className="text-xs">{st}</Badge>;
+    return (
+      <Badge variant="outline" className="text-xs">
+        {st}
+      </Badge>
+    );
   };
 
   return (
@@ -74,10 +83,18 @@ export function TodayAttendanceCard({
       <div>
         <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
           <div>
-            <CardTitle className="text-base font-semibold text-foreground">Today's Attendance Summary</CardTitle>
+            <CardTitle className="text-base font-semibold text-foreground">
+              Today's Attendance Summary
+            </CardTitle>
             <CardDescription className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
               <Calendar className="h-3.5 w-3.5" />
-              <span>Shift: {record?.shiftName || shiftName} ({record?.shiftStart && record?.shiftEnd ? `${record.shiftStart} - ${record.shiftEnd}` : shiftTime})</span>
+              <span>
+                Shift: {record?.shiftName || shiftName} (
+                {record?.shiftStart && record?.shiftEnd
+                  ? `${record.shiftStart} - ${record.shiftEnd}`
+                  : shiftTime}
+                )
+              </span>
             </CardDescription>
           </div>
           {getStatusBadge(status)}
@@ -112,7 +129,12 @@ export function TodayAttendanceCard({
                 <LogIn className="h-3.5 w-3.5 text-emerald-600" />
                 <span>First IN</span>
               </div>
-              <p className={cn("text-base font-semibold", hasFirstIn ? "text-foreground" : "text-muted-foreground")}>
+              <p
+                className={cn(
+                  "text-base font-semibold",
+                  hasFirstIn ? "text-foreground" : "text-muted-foreground",
+                )}
+              >
                 {record?.firstIn || "—"}
               </p>
               <p className="text-[10px] text-muted-foreground mt-0.5">
@@ -125,11 +147,16 @@ export function TodayAttendanceCard({
                 <LogOut className="h-3.5 w-3.5 text-blue-600" />
                 <span>Last OUT</span>
               </div>
-              <p className={cn("text-base font-semibold", hasLastOut ? "text-foreground" : "text-muted-foreground")}>
+              <p
+                className={cn(
+                  "text-base font-semibold",
+                  hasLastOut ? "text-foreground" : "text-muted-foreground",
+                )}
+              >
                 {record?.lastOut || "—"}
               </p>
               <p className="text-[10px] text-muted-foreground mt-0.5">
-                {hasLastOut ? "Recorded" : (hasFirstIn ? "Shift in progress" : "Awaiting punch")}
+                {hasLastOut ? "Recorded" : hasFirstIn ? "Shift in progress" : "Awaiting punch"}
               </p>
             </div>
           </div>

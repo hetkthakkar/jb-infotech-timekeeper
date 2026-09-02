@@ -6,11 +6,14 @@ import { Link } from "@tanstack/react-router";
 import type { ManualPunchRequest } from "@/services/api";
 
 export type PendingManualPunchesCardProps = {
-  requests?: ManualPunchRequest[];
-  loading?: boolean;
+  requests?: ManualPunchRequest[] | undefined;
+  loading?: boolean | undefined;
 };
 
-export function PendingManualPunchesCard({ requests = [], loading }: PendingManualPunchesCardProps) {
+export function PendingManualPunchesCard({
+  requests = [],
+  loading,
+}: PendingManualPunchesCardProps) {
   if (loading) {
     return (
       <Card className="h-full border-border/80 shadow-xs animate-pulse">
@@ -31,7 +34,9 @@ export function PendingManualPunchesCard({ requests = [], loading }: PendingManu
       <div>
         <CardHeader className="flex flex-row items-center justify-between pb-3 space-y-0">
           <div>
-            <CardTitle className="text-base font-semibold text-foreground">Manual Punch Requests</CardTitle>
+            <CardTitle className="text-base font-semibold text-foreground">
+              Manual Punch Requests
+            </CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
               Submitted attendance adjustment and regularization requests
             </CardDescription>

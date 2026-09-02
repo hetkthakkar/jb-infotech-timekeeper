@@ -24,20 +24,22 @@ import { cn } from "@/lib/utils";
 export type PunchActionCardProps = {
   employeeName: string;
   employeeId: string;
-  userRole?: string;
-  shiftName?: string;
-  todayAttendance?: AttendanceRecord | null;
-  todayPunches?: PunchRecord[];
-  isSubmitting?: boolean;
-  onPunch: (type: "IN" | "OUT", remarks?: string) => Promise<void>;
-  errorMessage?: string | null;
-  onClearError?: () => void;
-  locationStatus?: {
-    latitude: number | null;
-    longitude: number | null;
-    status: "idle" | "requesting" | "available" | "denied" | "unavailable";
-    message?: string;
-  };
+  userRole?: string | undefined;
+  shiftName?: string | undefined;
+  todayAttendance?: AttendanceRecord | null | undefined;
+  todayPunches?: PunchRecord[] | undefined;
+  isSubmitting?: boolean | undefined;
+  onPunch: (type: "IN" | "OUT", remarks?: string | undefined) => Promise<void>;
+  errorMessage?: string | null | undefined;
+  onClearError?: (() => void) | undefined;
+  locationStatus?:
+    | {
+        latitude: number | null;
+        longitude: number | null;
+        status: "idle" | "requesting" | "available" | "denied" | "unavailable";
+        message?: string | undefined;
+      }
+    | undefined;
 };
 
 export function PunchActionCard({
@@ -61,7 +63,7 @@ export function PunchActionCard({
   // Calculation: Has user punched IN without an OUT?
   const isCurrentlyIn = lastPunchType === "IN";
   const hasPunchedToday = todayPunches.length > 0;
-  
+
   // Completed day flag (if marked completed by backend or 2+ complete pairs)
   const isAttendanceCompleted =
     (todayAttendance?.status || "").toLowerCase().includes("completed") ||
@@ -91,7 +93,9 @@ export function PunchActionCard({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold text-foreground leading-snug">{employeeName}</h2>
+                <h2 className="text-base sm:text-lg font-bold text-foreground leading-snug">
+                  {employeeName}
+                </h2>
                 <Badge variant="outline" className="text-[10px] uppercase font-mono px-1.5 py-0">
                   {userRole}
                 </Badge>
@@ -115,8 +119,8 @@ export function PunchActionCard({
                 isCurrentlyIn
                   ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30"
                   : hasPunchedToday
-                  ? "bg-blue-500/15 text-blue-700 border-blue-500/30"
-                  : "bg-muted text-muted-foreground border-border"
+                    ? "bg-blue-500/15 text-blue-700 border-blue-500/30"
+                    : "bg-muted text-muted-foreground border-border",
               )}
             >
               {isCurrentlyIn ? (
@@ -136,9 +140,7 @@ export function PunchActionCard({
           <Alert variant="destructive" className="border-destructive/40 shadow-xs">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Punch Validation Notice</AlertTitle>
-            <AlertDescription className="text-xs mt-1">
-              {errorMessage}
-            </AlertDescription>
+            <AlertDescription className="text-xs mt-1">{errorMessage}</AlertDescription>
           </Alert>
         ) : null}
 
@@ -178,7 +180,7 @@ export function PunchActionCard({
                   "w-full h-16 sm:h-18 rounded-2xl text-base sm:text-lg font-bold tracking-wide shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer",
                   nextActionType === "IN"
                     ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20"
-                    : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20"
+                    : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20",
                 )}
               >
                 {isSubmitting ? (
@@ -227,7 +229,8 @@ export function PunchActionCard({
             <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
             {locationStatus?.status === "available" ? (
               <span className="text-emerald-700 font-medium">
-                GPS Location Captured ({locationStatus.latitude?.toFixed(4)}, {locationStatus.longitude?.toFixed(4)})
+                GPS Location Captured ({locationStatus.latitude?.toFixed(4)},{" "}
+                {locationStatus.longitude?.toFixed(4)})
               </span>
             ) : locationStatus?.status === "requesting" ? (
               <span className="text-primary flex items-center gap-1">

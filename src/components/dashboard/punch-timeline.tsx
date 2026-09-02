@@ -5,8 +5,8 @@ import type { PunchRecord } from "@/services/api";
 import { cn } from "@/lib/utils";
 
 export type PunchTimelineProps = {
-  punches?: PunchRecord[];
-  loading?: boolean;
+  punches?: PunchRecord[] | undefined;
+  loading?: boolean | undefined;
 };
 
 export function PunchTimeline({ punches = [], loading }: PunchTimelineProps) {
@@ -26,7 +26,7 @@ export function PunchTimeline({ punches = [], loading }: PunchTimelineProps) {
     );
   }
 
-  const getSourceIcon = (source?: string) => {
+  const getSourceIcon = (source?: string | undefined) => {
     const s = (source || "").toLowerCase();
     if (s.includes("mobile") || s.includes("app")) return <Smartphone className="h-3 w-3" />;
     if (s.includes("web")) return <Laptop className="h-3 w-3" />;
@@ -38,7 +38,9 @@ export function PunchTimeline({ punches = [], loading }: PunchTimelineProps) {
       <div>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-semibold text-foreground">Punch Timeline</CardTitle>
+            <CardTitle className="text-base font-semibold text-foreground">
+              Punch Timeline
+            </CardTitle>
             <Badge variant="outline" className="text-xs font-mono">
               {punches.length} {punches.length === 1 ? "punch" : "punches"}
             </Badge>
@@ -62,19 +64,33 @@ export function PunchTimeline({ punches = [], loading }: PunchTimelineProps) {
           ) : (
             <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
               {punches.map((punch, idx) => {
-                const isIN = punch.type?.toUpperCase() === "IN";
+                const punchType = (punch.type || punch.Type || "IN").toUpperCase();
+                const isIN = punchType === "IN";
+                const timeStr =
+                  punch.timestampIST ||
+                  punch.TimestampIST ||
+                  punch.timestamp ||
+                  (punch.date ? String(punch.date) : "—");
+                const sourceStr = punch.source || punch.Source || "App";
+                const remarksStr = punch.remarks || punch.Remarks;
+
                 return (
-                  <div key={punch.id || idx} className="relative flex items-start gap-3 text-xs">
+                  <div
+                    key={punch.punchId || punch.PunchID || punch.id || idx}
+                    className="relative flex items-start gap-3 text-xs"
+                  >
                     {/* Timeline bullet */}
                     <span
                       className={cn(
                         "absolute -left-6 top-1 flex h-5 w-5 items-center justify-center rounded-full ring-4 ring-card",
-                        isIN
-                          ? "bg-emerald-600 text-white"
-                          : "bg-blue-600 text-white"
+                        isIN ? "bg-emerald-600 text-white" : "bg-blue-600 text-white",
                       )}
                     >
-                      {isIN ? <LogIn className="h-2.5 w-2.5" /> : <LogOut className="h-2.5 w-2.5" />}
+                      {isIN ? (
+                        <LogIn className="h-2.5 w-2.5" />
+                      ) : (
+                        <LogOut className="h-2.5 w-2.5" />
+                      )}
                     </span>
 
                     <div className="flex-1 rounded-lg border border-border/70 bg-card p-2.5 shadow-2xs hover:border-border transition-colors">
@@ -84,21 +100,21 @@ export function PunchTimeline({ punches = [], loading }: PunchTimelineProps) {
                             "font-semibold text-xs px-2 py-0.5 rounded",
                             isIN
                               ? "bg-emerald-500/15 text-emerald-700 font-bold"
-                              : "bg-blue-500/15 text-blue-700 font-bold"
+                              : "bg-blue-500/15 text-blue-700 font-bold",
                           )}
                         >
-                          PUNCH {punch.type?.toUpperCase()}
+                          PUNCH {punchType}
                         </span>
                         <span className="font-mono text-xs font-semibold text-foreground">
-                          {punch.timestamp}
+                          {timeStr}
                         </span>
                       </div>
 
                       <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-                        {punch.source ? (
+                        {sourceStr ? (
                           <span className="flex items-center gap-1">
-                            {getSourceIcon(punch.source)}
-                            <span>{punch.source}</span>
+                            {getSourceIcon(sourceStr)}
+                            <span>{sourceStr}</span>
                           </span>
                         ) : null}
 
@@ -109,10 +125,8 @@ export function PunchTimeline({ punches = [], loading }: PunchTimelineProps) {
                           </span>
                         ) : null}
 
-                        {punch.remarks ? (
-                          <span className="italic text-foreground/70">
-                            "{punch.remarks}"
-                          </span>
+                        {remarksStr ? (
+                          <span className="italic text-foreground/70">"{remarksStr}"</span>
                         ) : null}
                       </div>
                     </div>

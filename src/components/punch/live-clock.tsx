@@ -9,7 +9,7 @@ export function LiveClock() {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      
+
       // Hours and Minutes
       const hours = now.getHours();
       const minutes = now.getMinutes().toString().padStart(2, "0");
@@ -45,10 +45,14 @@ export function LiveClock() {
 
       <div className="flex items-baseline justify-center gap-1.5 font-mono text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
         <span>{timeStr || "--:--"}</span>
-        <span className="text-base sm:text-lg font-semibold text-muted-foreground">{secondsStr || "--"}</span>
+        <span className="text-base sm:text-lg font-semibold text-muted-foreground">
+          {secondsStr || "--"}
+        </span>
       </div>
 
-      <p className="text-xs font-medium text-muted-foreground mt-1">{dateStr || "Loading date..."}</p>
+      <p className="text-xs font-medium text-muted-foreground mt-1">
+        {dateStr || "Loading date..."}
+      </p>
     </div>
   );
 }

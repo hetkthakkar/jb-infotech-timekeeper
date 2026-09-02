@@ -20,7 +20,10 @@ export const Route = createFileRoute("/reports")({
 function ReportsPage() {
   return (
     <AppShell title="Reports">
-      <PageHeader title="Reports" description="Comprehensive company attendance, leave, and analytics reports." />
+      <PageHeader
+        title="Reports"
+        description="Comprehensive company attendance, leave, and analytics reports."
+      />
       <ModulePlaceholder module="Reports" />
     </AppShell>
   );

@@ -101,156 +101,147 @@ export const api = { get, post };
 /* ---------------------------------------------------------------------- */
 
 export type SessionUser = {
-  id?: string;
-  employeeId?: string;
-  name?: string;
-  email?: string;
-  role?: string;
-  department?: string;
-  designation?: string;
-  shift?: string;
-  joinDate?: string;
-  [key: string]: unknown;
+  id?: string | undefined;
+  employeeId?: string | undefined;
+  name?: string | undefined;
+  email?: string | undefined;
+  role?: string | undefined;
+  department?: string | undefined;
+  designation?: string | undefined;
+  shift?: string | undefined;
+  joinDate?: string | undefined;
 };
 
 export type LoginResponse = {
-  token?: string;
-  user?: SessionUser;
-  employee?: SessionUser;
-} & Record<string, unknown>;
+  token?: string | undefined;
+  user?: SessionUser | undefined;
+  employee?: SessionUser | undefined;
+};
 
 export type AttendanceRecord = {
-  id?: string;
-  employeeId?: string;
-  employeeName?: string;
+  id?: string | undefined;
+  employeeId?: string | undefined;
+  employeeName?: string | undefined;
   date: string;
-  firstIn?: string;
-  lastOut?: string;
-  totalHours?: number | string;
-  status?: string; // Present, Absent, Half Day, Late, On Leave, Holiday, Weekly Off
-  punchCount?: number;
-  shiftName?: string;
-  shiftStart?: string;
-  shiftEnd?: string;
-  isLate?: boolean;
-  isEarlyExit?: boolean;
-  remarks?: string;
-  [key: string]: unknown;
+  firstIn?: string | undefined;
+  lastOut?: string | undefined;
+  totalHours?: number | string | undefined;
+  status?: string | undefined; // Present, Absent, Half Day, Late, On Leave, Holiday, Weekly Off
+  punchCount?: number | undefined;
+  shiftName?: string | undefined;
+  shiftStart?: string | undefined;
+  shiftEnd?: string | undefined;
+  isLate?: boolean | undefined;
+  isEarlyExit?: boolean | undefined;
+  remarks?: string | undefined;
 };
 
 export type PunchRecord = {
-  id?: string;
-  punchId?: string;
-  PunchID?: string;
-  employeeId?: string;
-  EmployeeID?: string;
-  employeeName?: string;
-  date?: string;
-  Date?: string;
-  timestamp?: string;
-  timestampIST?: string;
-  TimestampIST?: string;
+  id?: string | undefined;
+  punchId?: string | undefined;
+  PunchID?: string | undefined;
+  employeeId?: string | undefined;
+  EmployeeID?: string | undefined;
+  employeeName?: string | undefined;
+  date?: string | undefined;
+  Date?: string | undefined;
+  timestamp?: string | undefined;
+  timestampIST?: string | undefined;
+  TimestampIST?: string | undefined;
   type: "IN" | "OUT" | string;
-  Type?: "IN" | "OUT" | string;
-  source?: "App" | "Web" | "Biometric" | "Manual" | string;
-  Source?: string;
-  latitude?: number | string | null;
-  Latitude?: number | string | null;
-  longitude?: number | string | null;
-  Longitude?: number | string | null;
-  status?: string;
-  Status?: string;
-  remarks?: string;
-  Remarks?: string;
-  [key: string]: unknown;
+  Type?: "IN" | "OUT" | string | undefined;
+  source?: "App" | "Web" | "Biometric" | "Manual" | string | undefined;
+  Source?: string | undefined;
+  location?: string | undefined;
+  latitude?: number | string | null | undefined;
+  Latitude?: number | string | null | undefined;
+  longitude?: number | string | null | undefined;
+  Longitude?: number | string | null | undefined;
+  status?: string | undefined;
+  Status?: string | undefined;
+  remarks?: string | undefined;
+  Remarks?: string | undefined;
 };
 
-
 export type LeaveRecord = {
-  id?: string;
-  employeeId?: string;
-  employeeName?: string;
+  id?: string | undefined;
+  employeeId?: string | undefined;
+  employeeName?: string | undefined;
   leaveType: "CL" | "SL" | "EL" | "Casual" | "Sick" | "Privilege" | "Unpaid" | string;
   startDate: string;
   endDate: string;
   days: number;
-  reason?: string;
+  reason?: string | undefined;
   status: "Pending" | "Approved" | "Rejected" | "Cancelled" | string;
-  appliedOn?: string;
-  reviewedBy?: string;
-  reviewedAt?: string;
-  remarks?: string;
-  [key: string]: unknown;
+  appliedOn?: string | undefined;
+  reviewedBy?: string | undefined;
+  reviewedAt?: string | undefined;
+  remarks?: string | undefined;
 };
 
 export type LeaveBalance = {
-  casualLeave?: number;
-  sickLeave?: number;
-  earnedLeave?: number;
-  totalAvailable?: number;
-  used?: number;
-  remaining?: number;
-  [key: string]: unknown;
+  casualLeave?: number | undefined;
+  sickLeave?: number | undefined;
+  earnedLeave?: number | undefined;
+  totalAvailable?: number | undefined;
+  used?: number | undefined;
+  remaining?: number | undefined;
 };
 
 export type WarningRecord = {
-  id?: string;
-  employeeId?: string;
-  employeeName?: string;
+  id?: string | undefined;
+  employeeId?: string | undefined;
+  employeeName?: string | undefined;
   date: string;
   category: "Late Coming" | "Unexcused Absence" | "Policy Violation" | "Performance" | string;
-  severity?: "Low" | "Medium" | "High" | "Critical" | string;
+  severity?: "Low" | "Medium" | "High" | "Critical" | string | undefined;
   subject: string;
-  description?: string;
-  actionTaken?: string;
-  issuedBy?: string;
-  status?: "Active" | "Acknowledged" | "Resolved" | string;
-  [key: string]: unknown;
+  description?: string | undefined;
+  actionTaken?: string | undefined;
+  issuedBy?: string | undefined;
+  status?: "Active" | "Acknowledged" | "Resolved" | string | undefined;
 };
 
 export type ShiftRecord = {
-  id?: string;
+  id?: string | undefined;
   shiftName: string;
   startTime: string;
   endTime: string;
-  graceMinutes?: number;
-  halfDayHours?: number;
-  fullDayHours?: number;
-  isDefault?: boolean;
-  [key: string]: unknown;
+  graceMinutes?: number | undefined;
+  halfDayHours?: number | undefined;
+  fullDayHours?: number | undefined;
+  isDefault?: boolean | undefined;
 };
 
 export type ManualPunchRequest = {
-  id?: string;
-  employeeId?: string;
-  employeeName?: string;
+  id?: string | undefined;
+  employeeId?: string | undefined;
+  employeeName?: string | undefined;
   date: string;
   requestedTime: string;
   type: "IN" | "OUT" | string;
   reason: string;
   status: "Pending" | "Approved" | "Rejected" | string;
-  appliedOn?: string;
-  reviewedBy?: string;
-  reviewedAt?: string;
-  remarks?: string;
-  [key: string]: unknown;
+  appliedOn?: string | undefined;
+  reviewedBy?: string | undefined;
+  reviewedAt?: string | undefined;
+  remarks?: string | undefined;
 };
 
 export type DashboardSummary = {
-  todayStatus?: string;
-  firstIn?: string;
-  lastOut?: string;
-  totalWorkingHours?: string | number;
-  attendanceStatus?: string;
-  pendingRequestsCount?: number;
-  leaveBalance?: LeaveBalance;
-  activeWarningsCount?: number;
-  todayPunches?: PunchRecord[];
-  weeklyAttendance?: AttendanceRecord[];
-  recentLeaves?: LeaveRecord[];
-  recentWarnings?: WarningRecord[];
-  pendingManualPunches?: ManualPunchRequest[];
-  [key: string]: unknown;
+  todayStatus?: string | undefined;
+  firstIn?: string | undefined;
+  lastOut?: string | undefined;
+  totalWorkingHours?: string | number | undefined;
+  attendanceStatus?: string | undefined;
+  pendingRequestsCount?: number | undefined;
+  leaveBalance?: LeaveBalance | undefined;
+  activeWarningsCount?: number | undefined;
+  todayPunches?: PunchRecord[] | undefined;
+  weeklyAttendance?: AttendanceRecord[] | undefined;
+  recentLeaves?: LeaveRecord[] | undefined;
+  recentWarnings?: WarningRecord[] | undefined;
+  pendingManualPunches?: ManualPunchRequest[] | undefined;
 };
 
 export const authApi = {
@@ -277,15 +268,13 @@ export const punchApi = {
   getToday: (employeeId?: string) => get<PunchRecord[]>("getTodayPunches", { employeeId }),
   punch: (payload: {
     type: "IN" | "OUT" | string;
-    employeeId?: string;
-    source?: "App" | "Web" | "Mobile" | "Biometric" | string;
-    latitude?: number | string | null;
-    longitude?: number | string | null;
-    remarks?: string;
-    [key: string]: unknown;
+    employeeId?: string | undefined;
+    source?: "App" | "Web" | "Mobile" | "Biometric" | string | undefined;
+    latitude?: number | string | null | undefined;
+    longitude?: number | string | null | undefined;
+    remarks?: string | undefined;
   }) => post<PunchRecord>("punch", payload),
 };
-
 
 export const manualPunchApi = {
   list: (params?: Payload) => get<ManualPunchRequest[]>("getManualPunches", params),
@@ -304,7 +293,8 @@ export const leaveApi = {
 
 export const warningsApi = {
   list: (params?: Payload) => get<WarningRecord[]>("getWarnings", params),
-  getActive: (employeeId?: string) => get<WarningRecord[]>("getWarnings", { employeeId, status: "Active" }),
+  getActive: (employeeId?: string) =>
+    get<WarningRecord[]>("getWarnings", { employeeId, status: "Active" }),
 };
 
 export const shiftsApi = {
@@ -326,4 +316,3 @@ export const settingsApi = {
 export const dashboardApi = {
   getSummary: (employeeId?: string) => get<DashboardSummary>("getDashboardSummary", { employeeId }),
 };
-

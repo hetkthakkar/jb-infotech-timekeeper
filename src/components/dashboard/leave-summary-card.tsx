@@ -6,9 +6,9 @@ import { Link } from "@tanstack/react-router";
 import type { LeaveBalance, LeaveRecord } from "@/services/api";
 
 export type LeaveSummaryCardProps = {
-  balances?: LeaveBalance;
-  recentLeaves?: LeaveRecord[];
-  loading?: boolean;
+  balances?: LeaveBalance | undefined;
+  recentLeaves?: LeaveRecord[] | undefined;
+  loading?: boolean | undefined;
 };
 
 export function LeaveSummaryCard({ balances, recentLeaves = [], loading }: LeaveSummaryCardProps) {
@@ -55,13 +55,20 @@ export function LeaveSummaryCard({ balances, recentLeaves = [], loading }: Leave
     }
     if (s.includes("rejected")) {
       return (
-        <Badge variant="destructive" className="text-[10px] px-1.5 py-0 flex items-center gap-1 font-medium">
+        <Badge
+          variant="destructive"
+          className="text-[10px] px-1.5 py-0 flex items-center gap-1 font-medium"
+        >
           <XCircle className="h-2.5 w-2.5" />
           Rejected
         </Badge>
       );
     }
-    return <Badge variant="outline" className="text-[10px] px-1.5 py-0">{status}</Badge>;
+    return (
+      <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+        {status}
+      </Badge>
+    );
   };
 
   return (
@@ -121,10 +128,15 @@ export function LeaveSummaryCard({ balances, recentLeaves = [], loading }: Leave
                     <div className="min-w-0 flex-1 pr-2">
                       <div className="flex items-center gap-1.5">
                         <span className="font-semibold text-foreground">{leave.leaveType}</span>
-                        <span className="text-[11px] text-muted-foreground">({leave.days} {leave.days === 1 ? "day" : "days"})</span>
+                        <span className="text-[11px] text-muted-foreground">
+                          ({leave.days} {leave.days === 1 ? "day" : "days"})
+                        </span>
                       </div>
                       <p className="text-[11px] text-muted-foreground truncate mt-0.5">
-                        {leave.startDate} {leave.endDate && leave.endDate !== leave.startDate ? `to ${leave.endDate}` : ""}
+                        {leave.startDate}{" "}
+                        {leave.endDate && leave.endDate !== leave.startDate
+                          ? `to ${leave.endDate}`
+                          : ""}
                         {leave.reason ? ` • ${leave.reason}` : ""}
                       </p>
                     </div>
