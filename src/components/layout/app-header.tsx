@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { LogOut, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 export function AppHeader({ title }: { title?: string }) {
   const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -47,6 +48,7 @@ export function AppHeader({ title }: { title?: string }) {
             onClick={() => {
               logout();
               toast.success("Signed out");
+              void navigate({ to: "/login", replace: true });
             }}
           >
             <LogOut className="h-4 w-4" />
