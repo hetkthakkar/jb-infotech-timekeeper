@@ -107,6 +107,9 @@ export type SessionUser = {
   email?: string;
   role?: string;
   department?: string;
+  designation?: string;
+  shift?: string;
+  joinDate?: string;
   [key: string]: unknown;
 };
 
@@ -116,6 +119,140 @@ export type LoginResponse = {
   employee?: SessionUser;
 } & Record<string, unknown>;
 
+export type AttendanceRecord = {
+  id?: string;
+  employeeId?: string;
+  employeeName?: string;
+  date: string;
+  firstIn?: string;
+  lastOut?: string;
+  totalHours?: number | string;
+  status?: string; // Present, Absent, Half Day, Late, On Leave, Holiday, Weekly Off
+  punchCount?: number;
+  shiftName?: string;
+  shiftStart?: string;
+  shiftEnd?: string;
+  isLate?: boolean;
+  isEarlyExit?: boolean;
+  remarks?: string;
+  [key: string]: unknown;
+};
+
+export type PunchRecord = {
+  id?: string;
+  punchId?: string;
+  PunchID?: string;
+  employeeId?: string;
+  EmployeeID?: string;
+  employeeName?: string;
+  date?: string;
+  Date?: string;
+  timestamp?: string;
+  timestampIST?: string;
+  TimestampIST?: string;
+  type: "IN" | "OUT" | string;
+  Type?: "IN" | "OUT" | string;
+  source?: "App" | "Web" | "Biometric" | "Manual" | string;
+  Source?: string;
+  latitude?: number | string | null;
+  Latitude?: number | string | null;
+  longitude?: number | string | null;
+  Longitude?: number | string | null;
+  status?: string;
+  Status?: string;
+  remarks?: string;
+  Remarks?: string;
+  [key: string]: unknown;
+};
+
+
+export type LeaveRecord = {
+  id?: string;
+  employeeId?: string;
+  employeeName?: string;
+  leaveType: "CL" | "SL" | "EL" | "Casual" | "Sick" | "Privilege" | "Unpaid" | string;
+  startDate: string;
+  endDate: string;
+  days: number;
+  reason?: string;
+  status: "Pending" | "Approved" | "Rejected" | "Cancelled" | string;
+  appliedOn?: string;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  remarks?: string;
+  [key: string]: unknown;
+};
+
+export type LeaveBalance = {
+  casualLeave?: number;
+  sickLeave?: number;
+  earnedLeave?: number;
+  totalAvailable?: number;
+  used?: number;
+  remaining?: number;
+  [key: string]: unknown;
+};
+
+export type WarningRecord = {
+  id?: string;
+  employeeId?: string;
+  employeeName?: string;
+  date: string;
+  category: "Late Coming" | "Unexcused Absence" | "Policy Violation" | "Performance" | string;
+  severity?: "Low" | "Medium" | "High" | "Critical" | string;
+  subject: string;
+  description?: string;
+  actionTaken?: string;
+  issuedBy?: string;
+  status?: "Active" | "Acknowledged" | "Resolved" | string;
+  [key: string]: unknown;
+};
+
+export type ShiftRecord = {
+  id?: string;
+  shiftName: string;
+  startTime: string;
+  endTime: string;
+  graceMinutes?: number;
+  halfDayHours?: number;
+  fullDayHours?: number;
+  isDefault?: boolean;
+  [key: string]: unknown;
+};
+
+export type ManualPunchRequest = {
+  id?: string;
+  employeeId?: string;
+  employeeName?: string;
+  date: string;
+  requestedTime: string;
+  type: "IN" | "OUT" | string;
+  reason: string;
+  status: "Pending" | "Approved" | "Rejected" | string;
+  appliedOn?: string;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  remarks?: string;
+  [key: string]: unknown;
+};
+
+export type DashboardSummary = {
+  todayStatus?: string;
+  firstIn?: string;
+  lastOut?: string;
+  totalWorkingHours?: string | number;
+  attendanceStatus?: string;
+  pendingRequestsCount?: number;
+  leaveBalance?: LeaveBalance;
+  activeWarningsCount?: number;
+  todayPunches?: PunchRecord[];
+  weeklyAttendance?: AttendanceRecord[];
+  recentLeaves?: LeaveRecord[];
+  recentWarnings?: WarningRecord[];
+  pendingManualPunches?: ManualPunchRequest[];
+  [key: string]: unknown;
+};
+
 export const authApi = {
   login: (employeeId: string, password: string) =>
     post<LoginResponse>("login", { employeeId, email: employeeId, password }),
@@ -124,25 +261,69 @@ export const authApi = {
 };
 
 export const employeesApi = {
-  list: (params?: Payload) => get<unknown[]>("getEmployees", params),
+  list: (params?: Payload) => get<SessionUser[]>("getEmployees", params),
+  getById: (id: string) => get<SessionUser>("getEmployee", { id }),
 };
 
 export const attendanceApi = {
-  list: (params?: Payload) => get<unknown[]>("getAttendance", params),
+  list: (params?: Payload) => get<AttendanceRecord[]>("getAttendance", params),
+  getToday: (employeeId?: string) => get<AttendanceRecord>("getTodayAttendance", { employeeId }),
+  getWeekly: (employeeId?: string, startDate?: string) =>
+    get<AttendanceRecord[]>("getWeeklyAttendance", { employeeId, startDate }),
+};
+
+export const punchApi = {
+  list: (params?: Payload) => get<PunchRecord[]>("getPunches", params),
+  getToday: (employeeId?: string) => get<PunchRecord[]>("getTodayPunches", { employeeId }),
+  punch: (payload: {
+    type: "IN" | "OUT" | string;
+    employeeId?: string;
+    source?: "App" | "Web" | "Mobile" | "Biometric" | string;
+    latitude?: number | string | null;
+    longitude?: number | string | null;
+    remarks?: string;
+    [key: string]: unknown;
+  }) => post<PunchRecord>("punch", payload),
+};
+
+
+export const manualPunchApi = {
+  list: (params?: Payload) => get<ManualPunchRequest[]>("getManualPunches", params),
+  getPending: (employeeId?: string) =>
+    get<ManualPunchRequest[]>("getManualPunchRequests", { employeeId, status: "Pending" }),
+  create: (payload: { date: string; time: string; type: string; reason: string }) =>
+    post<ManualPunchRequest>("requestManualPunch", payload),
 };
 
 export const leaveApi = {
-  list: (params?: Payload) => get<unknown[]>("getLeaves", params),
+  list: (params?: Payload) => get<LeaveRecord[]>("getLeaves", params),
+  getBalances: (employeeId?: string) => get<LeaveBalance>("getLeaveBalances", { employeeId }),
+  apply: (payload: { leaveType: string; startDate: string; endDate: string; reason: string }) =>
+    post<LeaveRecord>("applyLeave", payload),
 };
 
 export const warningsApi = {
-  list: (params?: Payload) => get<unknown[]>("getWarnings", params),
+  list: (params?: Payload) => get<WarningRecord[]>("getWarnings", params),
+  getActive: (employeeId?: string) => get<WarningRecord[]>("getWarnings", { employeeId, status: "Active" }),
+};
+
+export const shiftsApi = {
+  list: (params?: Payload) => get<ShiftRecord[]>("getShifts", params),
 };
 
 export const payrollApi = {
   list: (params?: Payload) => get<unknown[]>("getPayroll", params),
 };
 
-export const shiftsApi = {
-  list: (params?: Payload) => get<unknown[]>("getShifts", params),
+export const reportsApi = {
+  list: (params?: Payload) => get<unknown[]>("getReports", params),
 };
+
+export const settingsApi = {
+  get: () => get<Record<string, unknown>>("getSettings"),
+};
+
+export const dashboardApi = {
+  getSummary: (employeeId?: string) => get<DashboardSummary>("getDashboardSummary", { employeeId }),
+};
+

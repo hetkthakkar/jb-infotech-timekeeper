@@ -16,6 +16,9 @@ import { Route as LeaveRouteImport } from './routes/leave'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ManualPunchRouteImport } from './routes/manual-punch'
 import { Route as PayrollRouteImport } from './routes/payroll'
+import { Route as PunchRouteImport } from './routes/punch'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ShiftsRouteImport } from './routes/shifts'
 import { Route as WarningsRouteImport } from './routes/warnings'
 
@@ -54,6 +57,21 @@ const PayrollRoute = PayrollRouteImport.update({
   path: '/payroll',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PunchRoute = PunchRouteImport.update({
+  id: '/punch',
+  path: '/punch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShiftsRoute = ShiftsRouteImport.update({
   id: '/shifts',
   path: '/shifts',
@@ -73,6 +91,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/manual-punch': typeof ManualPunchRoute
   '/payroll': typeof PayrollRoute
+  '/punch': typeof PunchRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
   '/warnings': typeof WarningsRoute
 }
@@ -84,6 +105,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/manual-punch': typeof ManualPunchRoute
   '/payroll': typeof PayrollRoute
+  '/punch': typeof PunchRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
   '/warnings': typeof WarningsRoute
 }
@@ -96,6 +120,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/manual-punch': typeof ManualPunchRoute
   '/payroll': typeof PayrollRoute
+  '/punch': typeof PunchRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
   '/warnings': typeof WarningsRoute
 }
@@ -109,6 +136,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/manual-punch'
     | '/payroll'
+    | '/punch'
+    | '/reports'
+    | '/settings'
     | '/shifts'
     | '/warnings'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +150,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/manual-punch'
     | '/payroll'
+    | '/punch'
+    | '/reports'
+    | '/settings'
     | '/shifts'
     | '/warnings'
   id:
@@ -131,6 +164,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/manual-punch'
     | '/payroll'
+    | '/punch'
+    | '/reports'
+    | '/settings'
     | '/shifts'
     | '/warnings'
   fileRoutesById: FileRoutesById
@@ -143,6 +179,9 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ManualPunchRoute: typeof ManualPunchRoute
   PayrollRoute: typeof PayrollRoute
+  PunchRoute: typeof PunchRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
   ShiftsRoute: typeof ShiftsRoute
   WarningsRoute: typeof WarningsRoute
 }
@@ -198,6 +237,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PayrollRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/punch': {
+      id: '/punch'
+      path: '/punch'
+      fullPath: '/punch'
+      preLoaderRoute: typeof PunchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shifts': {
       id: '/shifts'
       path: '/shifts'
@@ -223,6 +283,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ManualPunchRoute: ManualPunchRoute,
   PayrollRoute: PayrollRoute,
+  PunchRoute: PunchRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
   ShiftsRoute: ShiftsRoute,
   WarningsRoute: WarningsRoute,
 }
