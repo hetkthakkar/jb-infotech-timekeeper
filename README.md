@@ -2,8 +2,7 @@
 
 Build a professional Employee Attendance Management System for JB InfoTech. The backend is ALREADY BUILT using Google Sheets + Google Apps Script. The frontend must communicate with the existing Google Apps Script REST-style web app. The backend uses Google Sheets as the database.
 
-Backend Web App URL:
-https://script.google.com/macros/s/AKfycbyKjCgkadhM753pidTko0N6kmRqMgGT877UjvkhqsfnU-eR5vf4BEjc3Bx-VZecYWiI/exec
+- **Backend**: Google Apps Script Web App (`https://script.google.com/macros/s/AKfycbxVMZUiNvlg_yIx_e2zKfzhWavXpfjfRA8TDdjVILsj1Yy0zlHspOK_ScF83i4J36Ov/exec`)
 
 Existing Apps Script modules:
 Code.gs, Utils.gs, Auth.gs, Employees.gs, Shifts.gs, Punch.gs, Attendance.gs, ManualPunch.gs, Leave.gs, Warnings.gs, Payroll.gs, Triggers.gs, Test.gs
