@@ -106,13 +106,19 @@ export type SessionUser = {
   name?: string;
   email?: string;
   role?: string;
+  department?: string;
   [key: string]: unknown;
 };
 
-export type LoginResponse = { token?: string; user?: SessionUser } & Record<string, unknown>;
+export type LoginResponse = {
+  token?: string;
+  user?: SessionUser;
+  employee?: SessionUser;
+} & Record<string, unknown>;
 
 export const authApi = {
-  login: (email: string, password: string) => post<LoginResponse>("login", { email, password }),
+  login: (employeeId: string, password: string) =>
+    post<LoginResponse>("login", { employeeId, email: employeeId, password }),
   me: () => get<SessionUser>("me"),
   logout: () => post<unknown>("logout"),
 };

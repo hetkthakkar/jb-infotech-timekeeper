@@ -1,9 +1,11 @@
+import { requireAuth } from "@/lib/auth-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/common/page-header";
 import { ModulePlaceholder } from "@/components/common/module-placeholder";
 
 export const Route = createFileRoute("/attendance")({
+  beforeLoad: requireAuth,
   head: () => ({
     meta: [
       { title: "Attendance — JB InfoTech" },
