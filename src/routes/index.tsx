@@ -1,3 +1,4 @@
+import { requireAuth } from "@/lib/auth-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { CalendarDays, ClipboardCheck, ShieldAlert, Users } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
@@ -7,6 +8,7 @@ import { EmptyState } from "@/components/common/states";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: requireAuth,
   head: () => ({
     meta: [
       { title: "Dashboard — JB InfoTech Attendance" },
